@@ -1,8 +1,16 @@
+// Chat Application by:
+// Patrick Parreno - 101085299
+// Asim Patel -  10116270
+
+// Setting basic configuration for our application
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require("socket.io")(http);
 const mongoose = require('mongoose');
+const port = 4500;
 
+
+// Set constant for our database connection
 const mongoDB = "mongodb+srv://ChatAppDB:123skate@chatapplicationdb-x5azk.mongodb.net/chatDB?retryWrites=true&w=majority";
 
 
@@ -10,6 +18,8 @@ const mongoDB = "mongodb+srv://ChatAppDB:123skate@chatapplicationdb-x5azk.mongod
 const event = require('./models/eventLog');
 const message = require('./models/message');
 
+
+// connect to database with mongoose
 mongoose.connect(mongoDB, function(err, db){
 
     if(err){
@@ -18,8 +28,7 @@ mongoose.connect(mongoDB, function(err, db){
     console.log('connected to ChatApplicationDB...')
 });
 
-const port = 4500;
-
+// Listen to our port
 http.listen(port, () =>{
     console.log('listening on port: ' + port);
 });
@@ -42,12 +51,12 @@ app.get('/roomhistory/:roomName', function(req, res){
 });
 app.get('/roomhistory', function(req, res) {
     res.sendFile(__dirname + '/views/roomhistory.html');
-    message.fin().then(documents => {
+    message.find().then(documents => {
         console.log(documents)
     });
  });
  app.get('/eventlog', function(req, res) {
-    res.sendFile(__dirname + 'views/eventlog.html');
+    res.sendFile(__dirname + '/views/eventlog.html');
     event.find().then(documents => {
         console.log(documents);
     });
